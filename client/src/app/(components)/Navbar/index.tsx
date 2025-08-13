@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, Search, Settings } from "lucide-react";
+import { Search, Settings2 } from "lucide-react";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
@@ -22,7 +23,7 @@ const Navbar = () => {
           href="/settings"
           className="h-min w-min rounded p-2 hover:bg-gray-100"
         >
-          <Settings className="h-6 w-6 cursor-pointer dark:text-white" />
+          <Settings2 className="h-6 w-6 cursor-pointer dark:text-white " />
         </Link>
         <div className="mr-5 ml-2 hidden min-h-[2rem] w-[0.1rem] bg-gray-200 md:inline-block"></div>
       </div>
