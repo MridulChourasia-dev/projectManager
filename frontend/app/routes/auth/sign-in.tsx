@@ -22,10 +22,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 
-type SigninFromData = z.infer<typeof signInSchema>;
+type SigninFormData = z.infer<typeof signInSchema>;
 
 const SignIn = () => {
-  const form = useForm<SigninFromData>({
+  const form = useForm<SigninFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -33,7 +33,7 @@ const SignIn = () => {
     },
   });
 
-  const handleOnSubmit = (values: SigninFromData) => {
+  const handleOnSubmit = (values: SigninFormData) => {
     console.log("Form submitted with values:", values);
   };
 

@@ -21,11 +21,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
+import { useSignUpMutation } from "@/hooks/use-auth";
+import { toast } from "sonner";
 
-type SignupFromData = z.infer<typeof signUpSchema>;
+export type SignupFormData = z.infer<typeof signUpSchema>;
 
 const SignUp = () => {
-  const form = useForm<SignupFromData>({
+  const form = useForm<SignupFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
@@ -35,8 +37,22 @@ const SignUp = () => {
     },
   });
 
-  const handleOnSubmit = (values: SignupFromData) => {
-    console.log("Form submitted with values:", values);
+  const { mutate, isPending } = useSignUpMutation();
+
+  const handleOnSubmit = (values: SignupFormData) => {
+    mutate(values, {
+      onSuccess: () => {
+        toast.success("Account created successfully");
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error.response?.data?.message || "An error occured";
+        console.log(error);
+
+        toast.error(errorMessage);
+      },
+    });
+
   };
 
   return (
@@ -121,9 +137,10 @@ const SignUp = () => {
               <Button
                 type="submit"
                 className="w-full"
+                disabled={isPending}
                 onClick={form.handleSubmit(handleOnSubmit)}
               >
-                Sign Up
+                {isPending ? "Signing up..": "Sign up"}
               </Button>
             </form>
           </Form>
