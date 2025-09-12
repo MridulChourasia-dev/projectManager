@@ -20,13 +20,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useSignUpMutation } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export type SignupFormData = z.infer<typeof signUpSchema>;
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -42,7 +43,12 @@ const SignUp = () => {
   const handleOnSubmit = (values: SignupFormData) => {
     mutate(values, {
       onSuccess: () => {
-        toast.success("Account created successfully");
+        toast.success("Email Verification sent. Please check your inbox.", {
+          description:
+            "You can close this tab and return after verifying your email.",
+        });
+        form.reset();
+        navigate("/sign-in");
       },
       onError: (error: any) => {
         const errorMessage =
@@ -52,7 +58,6 @@ const SignUp = () => {
         toast.error(errorMessage);
       },
     });
-
   };
 
   return (
@@ -140,7 +145,7 @@ const SignUp = () => {
                 disabled={isPending}
                 onClick={form.handleSubmit(handleOnSubmit)}
               >
-                {isPending ? "Signing up..": "Sign up"}
+                {isPending ? "Signing up.." : "Sign up"}
               </Button>
             </form>
           </Form>

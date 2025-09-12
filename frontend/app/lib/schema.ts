@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { object, z } from "zod";
 
 export const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -22,3 +22,18 @@ export const signUpSchema = z
     path: ["confirmPassword"],
     message: "Passwords do not match",
   });
+
+
+export const resetPasswordSchema = z.object({
+  newPassword: z.string().min(8, { message: "Password must be at least 6 characters long" }),
+  confirmPassword: z.string().min(8, { message: "Confirm password is required" }),
+})
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    path: ["confirmNewPassword"],
+    message: "Passwords do not match",
+  })
+
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }),
+})

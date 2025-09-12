@@ -1,5 +1,5 @@
 import { signInSchema } from "@/lib/schema";
-import React from "react";
+import React, { use } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
@@ -20,11 +20,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useLoginMutation } from "@/hooks/use-auth";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "@/provider/auth-context";
 
 type SigninFormData = z.infer<typeof signInSchema>;
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const form = useForm<SigninFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -33,8 +39,22 @@ const SignIn = () => {
     },
   });
 
+  const { mutate, isPending } = useLoginMutation();
+
   const handleOnSubmit = (values: SigninFormData) => {
-    console.log("Form submitted with values:", values);
+    mutate(values, {
+      onSuccess: (data) => {
+        login(data);
+        toast.success("Logged in successfully");
+        navigate("/dashboard");
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        console.log(error);
+        toast.error(errorMessage);
+      },
+    });
   };
 
   return (
@@ -97,8 +117,13 @@ const SignIn = () => {
                 type="submit"
                 className="w-full"
                 onClick={form.handleSubmit(handleOnSubmit)}
+                disabled={isPending}
               >
-                Sign In
+                {isPending ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  "Sign In"
+                )}
               </Button>
             </form>
           </Form>
