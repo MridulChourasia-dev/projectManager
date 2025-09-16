@@ -2,7 +2,7 @@ import React, { use } from "react";
 import type { Workspace } from "@/types";
 import { useAuth } from "@/provider/auth-context";
 import { Button } from "../ui/button";
-import { Bell } from "lucide-react";
+import { Bell, PlusCircle } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
@@ -12,8 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
   DropdownMenuItem,
+  DropdownMenuGroup,
 } from "../ui/dropdown-menu";
 import { Link } from "react-router";
+import WorkspaceAvatar from "../workspace/workspace-avatar";
 
 interface HeaderProps {
   onWorkspaceSelected: (workspace: Workspace) => void;
@@ -27,11 +29,57 @@ function Header({
   onCreateWorkspace,
 }: HeaderProps) {
   const { user, logout } = useAuth();
+  const workspaces: any[] = [];
 
   return (
     <div className="bg-background sticky top-0 z-40 border-b">
       <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
-        <div></div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              {selectedWorkspace ? (
+                <>
+                  {selectedWorkspace.color && (
+                    <WorkspaceAvatar
+                      color={selectedWorkspace.color}
+                      name={selectedWorkspace.name}
+                    />
+                  )}
+
+                  <span className="font-medium">{selectedWorkspace.name}</span>
+                </>
+              ) : (
+                <span className="font-medium">Select Workspace</span>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuGroup>
+              {workspaces.map((ws) => (
+                <DropdownMenuItem
+                  key={ws.id}
+                  onClick={() => onWorkspaceSelected(ws)}
+                >
+                  {ws.color && (
+                    <WorkspaceAvatar color={ws.color} name={ws.name} />
+                  )}
+                  <span className="ml-2">{ws.name}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={onCreateWorkspace}>
+                <PlusCircle className="w-4 h-4 mr-2" />
+                Create Workspace
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">

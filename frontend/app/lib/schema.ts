@@ -37,3 +37,10 @@ export const resetPasswordSchema = z.object({
 export const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
 })
+
+
+export const workspaceSchema = z.object({
+  name: z.string().min(3, { message: "Workspace name is required" }),
+  color: z.string().min(3, { message: "Color must be at least 3 characters" }),
+  description: z.string().optional(),
+})

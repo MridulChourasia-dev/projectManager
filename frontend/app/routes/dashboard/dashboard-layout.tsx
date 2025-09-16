@@ -7,6 +7,8 @@ import { Navigate, Outlet } from "react-router";
 import Header from "@/components/layout/header";
 
 import type { Workspace } from "@/types";
+import SidebarComponent from "@/components/layout/sidebar-component";
+import { CreateWorkspace } from "@/components/workspace/create-workspace";
 
 const DashboardLayout = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -30,8 +32,8 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex h-screen w-full">
-      {/* <Sidebar Components */}
-          Sidebar
+      <SidebarComponent currentWorkspace={currentWorkspace} />
+
       <div className="flex flex-1 flex-col h-full">
         <Header
           onWorkspaceSelected={handleWorkspaceSelected}
@@ -45,6 +47,11 @@ const DashboardLayout = () => {
           </div>
         </main>
       </div>
+
+      <CreateWorkspace
+        isCreatingWorkspace={isCreatingWorkspace}
+        setIsCreatingWorkspace={setIsCreatingWorkspace}
+      />
     </div>
   );
 };
