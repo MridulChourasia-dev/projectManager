@@ -40,7 +40,7 @@ export const forgotPasswordSchema = z.object({
 
 
 export const workspaceSchema = z.object({
-  name: z.string().min(3, { message: "Workspace name is required" }),
-  color: z.string().min(3, { message: "Color must be at least 3 characters" }),
+  name: z.string().min(3, "Name must be at least 3 characters"),
+  color: z.string().min(3, "Color must be at least 3 characters"),
   description: z.string().optional(),
-})
+});

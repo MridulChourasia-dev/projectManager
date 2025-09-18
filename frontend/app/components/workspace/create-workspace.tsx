@@ -1,7 +1,7 @@
 import { workspaceSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog } from "@radix-ui/react-dialog";
-import React from "react";
+import React, { use } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import {
@@ -22,13 +22,17 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { useCreateWorkspace } from "@/hooks/use-workspace";
 
-interface CreatedWorkspaceProps {
+import { toast } from "sonner";
+import { useNavigate } from "react-router";
+
+interface CreateWorkspaceProps {
   isCreatingWorkspace: boolean;
   setIsCreatingWorkspace: (isCreatingWorkspace: boolean) => void;
 }
 
-type WorkspaceForm = z.infer<typeof workspaceSchema>;
+export type WorkspaceForm = z.infer<typeof workspaceSchema>;
 
 // Define 8 predefined colors
 export const colorOptions = [
@@ -45,7 +49,7 @@ export const colorOptions = [
 export const CreateWorkspace = ({
   isCreatingWorkspace,
   setIsCreatingWorkspace,
-}: CreatedWorkspaceProps) => {
+}: CreateWorkspaceProps) => {
   const form = useForm<WorkspaceForm>({
     resolver: zodResolver(workspaceSchema),
     defaultValues: {
@@ -55,10 +59,23 @@ export const CreateWorkspace = ({
     },
   });
 
-  const isPending = false;
+  const { mutate, isPending } = useCreateWorkspace();
+  const navigate = useNavigate();
 
   const onSubmit = (data: WorkspaceForm) => {
-    console.log(data);
+    mutate(data, {
+      onSuccess: (data: any) => {
+        form.reset();
+        setIsCreatingWorkspace(false);
+        toast.success("Workspace created successfully");
+        navigate(`/workspaces/${data._id}`);
+      },
+      onError: (error: any) => {
+        const errorMessage = error.response.data.message;
+        toast.error(errorMessage);
+        console.log(error);
+      },
+    });
   };
 
   return (
@@ -122,7 +139,7 @@ export const CreateWorkspace = ({
                             className={cn(
                               "w-6 h-6 rounded-full cursor-pointer hover:opacity-80 transition-all duration-300",
                               field.value === color &&
-                                "ring-2 ring-offset-2 ring-blue-500"
+                                "ring-2 ring-offset-2 ring-blue-800"
                             )}
                             style={{ backgroundColor: color }}
                           ></div>

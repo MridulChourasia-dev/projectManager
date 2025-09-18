@@ -1,10 +1,12 @@
+import type { Key } from "react";
+
 export interface User {
     _id: string;
     email: string;
     name: string;
-    createdAt: string
+    createdAt: Date
     isEmailVerified: boolean;
-    updatedAt: string
+    updatedAt: Date
     profilePicture?: string;
 }
 
@@ -20,6 +22,6 @@ export interface Workspace {
         role: "admin" | "member" | "viewer" | "owner";
         joinedAt: string;
     }[]
-    createdAt: string;
-
+    createdAt: Date;
+    updatedAt: Date;
 }

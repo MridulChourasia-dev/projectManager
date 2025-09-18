@@ -85,6 +85,7 @@ export const SidebarComponent = ({
           size="icon"
           className="ml-auto hidden md:block"
           onClick={() => setIsCollapsed(!isCollapsed)}
+          style={{ paddingLeft:"9px" }}
         >
           {isCollapsed ? (
             <ChevronsRight className="size-4" />
