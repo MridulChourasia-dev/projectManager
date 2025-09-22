@@ -15,6 +15,7 @@ const registerUser = async (req, res) => {
     if (decision.isDenied()) {
       res.writeHead(429, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ message: "invalid email address" }));
+      return;
     }
 
     const existingUser = await User.findOne({ email });
@@ -331,8 +332,6 @@ const verifyResatPasswordTokenAndResatPassword = async (req, res) => {
     });
   }
 };
-
-
 
 export {
   registerUser,

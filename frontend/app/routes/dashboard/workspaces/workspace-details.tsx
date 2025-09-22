@@ -5,6 +5,7 @@ import type { Workspace, Project } from "@/types";
 import { useState } from "react";
 import { useParams } from "react-router";
 import { ProjectList } from "@/components/workspace/project-list";
+import { CreateProjectDailog } from "@/components/project/create-project";
 
 const WorkspaceDetails = () => {
   const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -43,8 +44,15 @@ const WorkspaceDetails = () => {
 
       <ProjectList
         workspaceId={workspaceId}
-        projects= {data.projects}
+        projects={data.projects}
         onCreateProject={() => setIsCreateProject(true)}
+      />
+
+      <CreateProjectDailog
+        isOpen={isCreateProject}
+        onOpenChange={setIsCreateProject}
+        workspaceId={workspaceId}
+        workspaceMembers={data.workspace.members as any}
       />
     </div>
   );

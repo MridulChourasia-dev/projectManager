@@ -19,12 +19,12 @@ const createWorkspace = async (req, res) => {
       ],
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       workspace,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -34,10 +34,10 @@ const getWorkspaces = async (req, res) => {
       "members.user": req.user._id,
     }).sort({ createdAt: -1 });
 
-    res.status(200).json(workspaces);
+    return res.status(200).json(workspaces);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -53,12 +53,12 @@ const getWorkspaceDetails = async (req, res) => {
       return res.status(404).json({ message: "Workspace not found" });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       workspace,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -81,13 +81,13 @@ const getWorkspaceProjects = async (req, res) => {
       isArchived: false,
       members: { $in: [req.user._id] },
     })
-      .populate("task", "status ")
+      .populate("task", "status")
       .sort({ createdAt: -1 });
 
-    res.status(200).json({ projects, workspace });
+    return res.status(200).json({ projects, workspace });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
