@@ -1,0 +1,18 @@
+import type { CreateTaskFormData } from "@/components/task/create-task-dialog";
+import { fetchData, postData, updateData } from "@/lib/fetch-utils";
+import type { TaskPriority, TaskStatus } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+export const useCreateTaskMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: { projectId: string; taskData: CreateTaskFormData }) =>
+            postData(`/tasks/${data.projectId}/create-task`, data.taskData),
+        onSuccess: (data: any) => {
+            queryClient.invalidateQueries({
+                queryKey: ["project", data.project],
+            });
+        },
+    });
+};
